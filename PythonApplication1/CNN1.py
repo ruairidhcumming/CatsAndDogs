@@ -50,7 +50,7 @@ train_generator = train_datagen.flow_from_directory(
 
 # this is a similar generator, for validation data
 validation_generator = test_datagen.flow_from_directory(
-        '../test1',
+        '../validate',
         target_size=(150, 150),
         batch_size=batch_size,
         class_mode='binary')
@@ -61,4 +61,4 @@ model.fit_generator(
         epochs=50,
         validation_data=validation_generator,
         validation_steps=800 // batch_size)
-model.save_weights('first_try.h5')  # always save your weights after training or during training
+model.save_weights('first_try_gpu.h5')  # always save your weights after training or during training
