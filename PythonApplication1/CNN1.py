@@ -1,11 +1,12 @@
 
+from keras.optimizers import RMSprop
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 print('creating CNN model')
 model = Sequential()
-model.add(Conv2D(32, (3, 3), input_shape=( 150, 150,3)))
+model.add(Conv2D(32, (5, 5), input_shape=( 150, 150,3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -23,9 +24,11 @@ model.add(Activation('relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1))
 model.add(Activation('sigmoid'))
+## define custom optimiser
+opt = RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.001)
 
 model.compile(loss='binary_crossentropy',
-              optimizer='rmsprop',
+              optimizer=opt,
               metrics=['accuracy'])
 
 train_datagen = ImageDataGenerator(
@@ -58,7 +61,7 @@ validation_generator = test_datagen.flow_from_directory(
 model.fit_generator(
         train_generator,
         steps_per_epoch=2000 // batch_size,
-        epochs=50,
+        epochs=2500,
         validation_data=validation_generator,
         validation_steps=800 // batch_size)
-model.save_weights('first_try_gpu.h5')  # always save your weights after training or during training
+model.save_weights('long_run_gpu.h5')  # always save your weights after training or during training
